@@ -1,0 +1,210 @@
+#ifndef _ADS_1291_COMMANDS_H_
+#define _ADS_1291_COMMANDS_H_
+
+enum ads1291_spi_command {
+	// system commands
+	WAKEUP = 0x02,
+	STANDBY = 0x04,
+	NRESET = 0x06,
+	START = 0x08,
+	STOP = 0x0a,
+	OFFSETCAL = 0x1a,
+
+	// read commands
+	RDATAC = 0x10,
+	SDATAC = 0x11,
+	RDATA = 0x12,
+
+	// register commands
+	RREG = 0x20,
+	WREG = 0x40
+};
+
+enum ads1291_reg {
+	// device settings
+	ADS_ID = 0x00,
+
+	// global settings
+	CONFIG1 = 0x01,
+	CONFIG2 = 0x02,
+	LOFF = 0x03,
+
+	// channel specific settings
+	CHnSET = 0x04,
+	CH1SET = CHnSET + 0,
+	CH2SET = CHnSET + 1,
+
+	RLD_SENS = 0x06,
+	LOFF_SENS = 0x07,
+
+	LOFF_STAT = 0x08,
+
+	// other
+	GPIO = 0x0B,
+	RESP1 = 0x09,
+	RESP2 = 0xA0,
+};
+
+enum ID_bits {
+	ID_ADS1x9x = 0b01000000,
+	ID_ADS1292R = 0b01100000,
+
+	ID_ADS1191 = 0b00,
+	ID_ADS1192 = 0b01,
+	ID_ADS1291 = 0b10,
+	ID_ADS1292_92R = 0b11,
+
+	ID_const = 0b00010000,
+};
+
+enum CONFIG1_bits {
+	SINGLE_SHOT = 0b10000000,
+
+	CONFIG1_const = 0x00,
+
+	HIGH_RES_8k_SPS = (CONFIG1_const | 0b110),
+	HIGH_RES_4k_SPS = (CONFIG1_const | 0b101),
+	HIGH_RES_2k_SPS = (CONFIG1_const | 0b100),
+	HIGH_RES_1k_SPS = (CONFIG1_const | 0b011),
+	HIGH_RES_500_SPS = (CONFIG1_const | 0b010),
+	LOW_POWR_250_SPS = (CONFIG1_const | 0b001),
+	LOW_POWR_125_SPS = 	CONFIG1_const | 0x00,
+
+};
+
+enum CONFIG2_bits {
+	PDB_LOFF_COMP = 0b1000000,
+	PDB_REFBUF = 0b100000,
+	VREF_4V = 0b10000,
+	CLK_EN = 0b1000,
+	INT_TEST = 0b10,
+	TEST_FREQ = 0b01,
+
+	CONFIG2_const = 0b10000000, //default reg value
+	INT_TEST_1HZ = (CONFIG2_const | INT_TEST | TEST_FREQ),
+};
+
+enum LOFF_bits {
+	COMP_TH2 = 0x80,
+	COMP_TH1 = 0x40,
+	COMP_TH0 = 0x20,
+	VLEAD_OFF_EN = 0x10,
+	ILEAD_OFF1 = 0x08,
+	ILEAD_OFF0 = 0x04,
+
+	FLEAD_OFF1 = 0x02,
+	FLEAD_OFF0 = 0x01,
+
+	LOFF_const = 0b10000,
+
+	COMP_TH_95 = 0x00,
+	COMP_TH_92_5 = COMP_TH0,
+	COMP_TH_90 = COMP_TH1,
+	COMP_TH_87_5 = (COMP_TH1 | COMP_TH0),
+	COMP_TH_85 = COMP_TH2,
+	COMP_TH_80 = (COMP_TH2 | COMP_TH0),
+	COMP_TH_75 = (COMP_TH2 | COMP_TH1),
+	COMP_TH_70 = (COMP_TH2 | COMP_TH1 | COMP_TH0),
+
+	ILEAD_OFF_6nA = 0x00,
+	ILEAD_OFF_22nA = ILEAD_OFF0,
+	ILEAD_OFF_6uA = ILEAD_OFF1,
+	ILEAD_OFF_24uA = (ILEAD_OFF1 | ILEAD_OFF0),
+
+	FLEAD_OFF_AC = FLEAD_OFF0
+};
+
+enum CH1SET_bits {
+	CH1_PD1 = 0b10000000,
+
+	CH1_GAIN_1x =	0b00010000,
+	CH1_GAIN_2x =	0b00100000,
+	CH1_GAIN_3x =	0b00110000,
+	CH1_GAIN_4x =	0b01000000,
+	CH1_GAIN_6x =	0x0,
+	CH1_GAIN_8x =	0b01010000,
+	CH1_GAIN_12x =	0b01100000,
+
+	CH1_INP_SHRT = 0b0001,
+	CH1_RLD_MEASURE = 0b0010,
+	CH1_MVDD = 0b0011,
+	CH1_TEMP = 0b0100,
+	CH1_TEST = 0b0101,
+	CH1_RLD_DRP = 0b00110,
+	CH1_RLD_DRM = 0b0111,
+	CH1_RLD_DRPM = 0b1000,
+
+	CH1SET_const = 0x0
+};
+
+
+enum CH2SET_bits {
+	CH2_PD2 = 0b10000000,
+
+	CH2_GAIN_1x = 0b00010000,
+	CH2_GAIN_2x = 0b00100000,
+	CH2_GAIN_3x = 0b00110000,
+	CH2_GAIN_4x = 0b01000000,
+	CH2_GAIN_6x = 0x0,
+	CH2_GAIN_8x = 0b01010000,
+	CH2_GAIN_12x = 0b01100000,
+
+	CH2_INP_SHRT = 0b0001,
+	CH2_RLD_MEASURE = 0b0010,
+	CH2_VDD = 0b0011,
+	CH2_TEMP = 0b0100,
+	CH2_TEST = 0b0101,
+	CH2_RLD_DRP = 0b00110,
+	CH2_RLD_DRM = 0b0111,
+	CH2_RLD_DRPM = 0b1000,
+
+	CH2SET_const = 0x0
+};
+
+enum RLD_SENS_bits {
+	CHOP_4 = 0b11000000,
+	CHOP_2 = 0b10000000,
+	CHOP_16 = 0b00000000,
+
+	PDB_RLD = 0b100000,
+	RLD_LOFF_SENSE = 0b10000,
+
+	RLD2N = 0b1000,
+	RLD2P = 0b100,
+
+	RLD1N = 0b10,
+	RLD1P = 0b1,
+
+	RLD_SENSP_const = 0x00
+};
+
+
+enum LOFF_SENS_bits {
+	FLIP2 = 0b100000,
+	FLIP1 = 0b10000,
+
+	LOFF2N = 0b1000,
+	LOFF2P = 0b100,
+	LOFF1N = 0b10,
+	LOFF1P = 0b1,
+
+	LOFF_SENSP_const = 0x00
+};
+
+enum GPIO_bits {
+	GPIO_INP1 = 0b0100,
+	GPIO_INP2 = 0b1000,
+	GPIO_const = 0x00
+};
+
+enum RESP1_bits {
+	RESP1_const = 0x2
+};
+
+enum RESP2_bits {
+	RLDREF_INT = 0b10,
+	CALIB_ON = 0b1000000,
+	RESP2_const = 0b1,
+};
+
+#endif// _ADS_1291_COMMANDS_H_
